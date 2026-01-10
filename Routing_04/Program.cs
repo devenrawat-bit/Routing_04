@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using System.ComponentModel;
+using System.Runtime.Intrinsics.X86;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -12,7 +14,7 @@ app.Map("map1",async (context) =>
 app.Map("map2",async (context) =>
 {
        await context.Response.WriteAsync("Map 2");
-}); 
+});
 
 //now keep in mind the map middleware is added at the end of the pipeline so not to use the map.use after the map 
 
@@ -27,6 +29,35 @@ app.Map("map2",async (context) =>
 //route parameter values are also called as route values 
 
 app.Map("files/{filename}.{extension}", async (context) =>
+
+//app.Map("files/{filename}.{extension?}", async (context) => for the optional parameter then just suffix that with the question mark then it will give the null value if there is no value supplied for the extension in the url 
+//context.request.routevalues.containskey("extension"))
+
+
+//👉 ContainsKey("x") use karo jab sure nahi ho key exist karti hai ya nahi
+//👉 ["x"] direct use karo jab 100% sure ho key exist karegi👉 ContainsKey("x") use karo jab sure nahi ho key exist karti hai ya nahi
+//👉 ["x"] direct use karo jab 100% sure ho key exist karegi
+
+//route constraints bhi hote hain jisme hum specify kar sakte hain ki kaunsa route parameter kis type ka hoga jaise int, guid, datetime etc
+//app.Map("url/{id:guid}",  () =>
+//{
+//like this there are more types of route constraints like int, datetime, decimal, double, float, long etc
+//});
+//min length like => 
+//{ id:minlength(3) } => iska matlab hai ki id ka minimum length 3 hona chahiye
+//{id:maxlength(5)} => iska matlab hai ki id ka maximum length 5 hona chahiye   
+//{id:length(4)} => iska matlab hai ki id ka length exactly 4 hona chahiye
+//{id:length(3,5)} =>only between 3 to 5 length
+//{id:range(1,100)} => iska matlab hai ki id ka value 1 se 100 ke beech hona chahiye
+//{id:min(10)} => iska matlab hai ki id ka value minimum 10 hona chahiye
+//{id:max(100)} => iska matlab hai ki id ka value maximum 100 hona chahiye
+//{name:alpha} => iska matlab hai ki name sirf alphabetic characters hone chahiye
+//{code:regex(^[a-zA-Z0-9]*$)} => iska matlab hai ki code sirf alphanumeric characters hone chahiye
+//multiple constraints bhi laga sakte hain jaise {id:int:min(1):max(100)}
+
+
+
+//app.Map("files/{filename}.{extension=txt }", async (context) =>  for the default route parameter we will do = in front of the route parameter
 {
     string? fileName = Convert.ToString( context.Request.RouteValues["filename"]);//important here that the route parameter returns the data in the object form so we have to convert it into the string format 
     //route parameter can never have a space 
@@ -38,6 +69,7 @@ app.MapFallback(async (context) =>
 {
     await context.Response.WriteAsync("Fallback");
 });
+
 
 
 app.Run();
