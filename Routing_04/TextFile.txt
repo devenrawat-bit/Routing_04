@@ -1,0 +1,7 @@
+﻿the route which has more routes segment has more priority like a/b/c/d has more than the a/b/c 
+
+url that has more literal has more precedence than the parameterized route like a/b/c/d has more precedence than a/b/{param}/d
+
+url template that has the constraints has more precedence than the url template without constraints like a/b/{param:int}/d has more precedence than a/b/{param}/d
+
+catch all parameters represented by the ** and has the least precedence 

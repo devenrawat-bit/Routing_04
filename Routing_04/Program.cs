@@ -1,8 +1,15 @@
 ﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Routing_04.CustomConstraints;
 using System.ComponentModel;
 using System.Runtime.Intrinsics.X86;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap.Add("months", typeof(monthsCustomConstraints));
+    //the above line is used to register the custom constraint in the program.cs file so that we can use it in the map method
+    //months here we will use in nowownward for the custom constrainsts, just like others now we will use the months in the constraint like we do in length, max, min, int etc we will use the months {month:months} like this 
+});
 var app = builder.Build();
 
 //app.MapGet("/", () => "Hello World!");
